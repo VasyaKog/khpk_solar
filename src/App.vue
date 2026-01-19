@@ -1,38 +1,32 @@
 <template>
-  <div class="container">
-    <LogoHPK/>
-    <div v-if="!loading" class="error">
-      <BatteryStatus class="line1" :soc="85" :battery-flow="+2540"/>
-      <Solar class="line1" :solar-power="28000"/>
-      <Grid class="line1" :grid-flow="2000" :grid-available="false"/>
-      <Load class="line1" :loadPower="1400" :available="true"/>
-
-      <KhpkMain :loadW="2500" backgroundUrl="/images/HPK.png"/>
-
-      <BatteryStatus class="line2" :soc="85" :battery-flow="+2540"/>
-      <Solar class="line2" :solar-power="28000"/>
-      <Grid class="line2" :grid-flow="2000" :grid-available="false"/>
-      <Load class="line2" :loadPower="1400" :available="true"/>
+    <template v-if="!loading">
+      <DashboardLayout
+          :line1SolarPower="data.inverters[0]?.pvPower"
+          :line2SolarPower="data.inverters[1]?.pvPower"
+          :line1GridFlow="data.inverters[0]?.gridFlow"
+          :line1GridAvailable="data.inverters[0].gridStatus"
+          :line2GridFlow="data.inverters[1].gridFlow"
+          :line2GridAvailable="data.inverters[1].gridStatus"
+          :line1LoadPower="data.inverters[0].consumption"
+          :line2LoadPower="data.inverters[1].consumption"
+          :line1BatterySoc="data.inverters[0].soc"
+          :line1BatteryFlow="data.inverters[0].batteryFlow"
+          :line2BatterySoc="data.inverters[1].soc"
+          :line2BatteryFlow="data.inverters[1].batteryFlow"
+          :khpkTotalLoad="10000"
+          :khkp-b-g-url="'/images/HPK.png'"
+          />
+    </template>
+    <div v-else class="loading">
+      <div class="loading-text">Loading data...</div>
     </div>
-
-
-
-    <div class="header">
-      <template v-if="demoMode">Режим демонстрації: синтетичні дані. Додайте ?tokenId=...&sn=... до URL або налаштуйте .env і використовуйте /api/solax/realtime.</template>
-      <template v-else>Джерело: SolaX Cloud API v6.1 — LIVE.</template>
-    </div>
-  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import VChart from 'vue-echarts'
 import LogoHPK from "./components/LogoHPK.vue";
-import BatteryStatus from "./components/BatteryStatus.vue";
-import Solar from "./components/Solar.vue";
-import Grid from "./components/Grid.vue";
-import Load from "./components/Load.vue";
-import KhpkMain from "./components/KhpkMain.vue";
+import DashboardLayout from "./components/DashboardLayout.vue";
 
 // register
 const vChart = VChart;
@@ -75,7 +69,7 @@ const gridPower = computed(() => data.value?.feedinpower ?? 0)
 const batteryPower = computed(() => data.value?.batPower ?? 0)
 
 const statusText = computed(() => {
-  const code = data.value?.inverterStatus
+  const code = data.value?.invertersStatus
   return code==null ? '—' : (STATUS_MAP[code] || `Status ${code}`)
 })
 

@@ -108,6 +108,7 @@ class InverterData {
             batteryFlow: batteryPowerFixed,
             gridStatus: gridPresence,
             gridFlow: externalGridPower,
+            soc: this.soc,
             consumption: this.estimatedLoad,
 
             // Статистика за день (kWh)
