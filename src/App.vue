@@ -2,14 +2,21 @@
   <div class="container">
     <LogoHPK/>
     <div v-if="!loading" class="error">
-      <BatteryStatus :soc="85" :battery-flow="+2540"/>
-      <Solar :solar-power="28000"/>
-      <Grid :grid-flow="2000" :grid-available="false"/>
+      <BatteryStatus class="line1" :soc="85" :battery-flow="+2540"/>
+      <Solar class="line1" :solar-power="28000"/>
+      <Grid class="line1" :grid-flow="2000" :grid-available="false"/>
+      <Load class="line1" :loadPower="1400" :available="true"/>
 
-    </div>
-    <div>
+      <KhpkMain :loadW="2500" backgroundUrl="/images/HPK.png"/>
 
+      <BatteryStatus class="line2" :soc="85" :battery-flow="+2540"/>
+      <Solar class="line2" :solar-power="28000"/>
+      <Grid class="line2" :grid-flow="2000" :grid-available="false"/>
+      <Load class="line2" :loadPower="1400" :available="true"/>
     </div>
+
+
+
     <div class="header">
       <template v-if="demoMode">Режим демонстрації: синтетичні дані. Додайте ?tokenId=...&sn=... до URL або налаштуйте .env і використовуйте /api/solax/realtime.</template>
       <template v-else>Джерело: SolaX Cloud API v6.1 — LIVE.</template>
@@ -24,6 +31,8 @@ import LogoHPK from "./components/LogoHPK.vue";
 import BatteryStatus from "./components/BatteryStatus.vue";
 import Solar from "./components/Solar.vue";
 import Grid from "./components/Grid.vue";
+import Load from "./components/Load.vue";
+import KhpkMain from "./components/KhpkMain.vue";
 
 // register
 const vChart = VChart;
