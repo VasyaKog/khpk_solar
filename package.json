@@ -1,0 +1,23 @@
+{
+  "name": "solax-vue-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173 --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "echarts": "^5.5.0",
+    "vue": "^3.4.0",
+    "vue-echarts": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^5.4.0"
+  }
+}
