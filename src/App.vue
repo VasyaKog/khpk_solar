@@ -1,5 +1,5 @@
 <template>
-    <template v-if="!loading">
+    <template v-if="!loading && data.inverters.length == 2">
       <DashboardLayout
           :line1SolarPower="data.inverters[0]?.pvPower"
           :line2SolarPower="data.inverters[1]?.pvPower"
@@ -49,51 +49,18 @@ function useQuery() {
   }
 }
 
-const data = ref(null)
+const data = ref({})
 const error = ref(null)
 const loading = ref(true)
 const lastUpdated = ref(null)
 const series = ref([]) // {t,pv,load,grid,bat}
 
 const { tokenId, sn } = useQuery()
-const demoMode = ref(!(tokenId && sn))
+const demoMode = ref(false)
 
 const intervalDemo = ref(null)
 const intervalLive = ref(null)
 
-const pvPower = computed(() => {
-  if (!data.value) return 0
-  return (data.value.powerdc1||0)+(data.value.powerdc2||0)+(data.value.powerdc3||0)+(data.value.powerdc4||0)
-})
-const gridPower = computed(() => data.value?.feedinpower ?? 0)
-const batteryPower = computed(() => data.value?.batPower ?? 0)
-
-const statusText = computed(() => {
-  const code = data.value?.invertersStatus
-  return code==null ? '—' : (STATUS_MAP[code] || `Status ${code}`)
-})
-
-const lastUpdatedText = computed(() => lastUpdated.value
-    ? lastUpdated.value.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})
-    : '—'
-)
-
-function toFixed(v, n=1) {
-  if (v==null || isNaN(v)) return '0.0'
-  try { return Number(v).toFixed(n) } catch { return String(v) }
-}
-
-function formatWatt(w) {
-  if (w==null) return '—'
-  const aw = Math.abs(w)
-  if (aw < 1000) return `${Math.round(w)} W`
-  return `${(w/1000).toFixed(2)} kW`
-}
-
-function pushPoint(now, pv, load, grid, bat) {
-  series.value.push({ t: now.getTime(), pv, load, grid, bat })
-  if (series.value.length > 60) series.value.shift()
-}
 
 function startDemo() {
   stopAll()
@@ -166,7 +133,6 @@ function startDemo() {
     console.log('Fetched data:', data.value)
 
     lastUpdated.value = now
-    pushPoint(now, total.pvPower, total.consumption, total.gridFlow, total.batteryFlow)
     loading.value = false
   }
 
@@ -176,22 +142,11 @@ function startDemo() {
 
 async function fetchOnce() {
   try {
-    error.value = null
-    const url = `/api/solax/realtime?tokenId=${encodeURIComponent(tokenId||'')}&sn=${encodeURIComponent(sn||'')}`
+    const url = `http://localhost:8787/api/solax/realtime`
     const r = await fetch(url, { cache: 'no-store' })
     if (!r.ok) throw new Error('HTTP '+r.status)
-    const json = await r.json()
-    if (!json.success) throw new Error(json.exception||'SolaX response not successful')
-    if (!json.result) throw new Error('Empty result')
-    data.value = json.result
-    const now = new Date()
-    lastUpdated.value = now
-    const pv = (json.result.powerdc1||0)+(json.result.powerdc2||0)+(json.result.powerdc3||0)+(json.result.powerdc4||0)
-    const grid = json.result.feedinpower ?? 0
-    const ac = json.result.acpower ?? 0
-    const bat = json.result.batPower ?? 0
-    const estimatedLoad = ac + Math.max(0, -grid) + Math.max(0, bat) - Math.max(0, grid) + Math.max(0, -bat)
-    pushPoint(now, pv, Math.max(0, estimatedLoad), grid, bat)
+    const json = await r.json();
+    data.value = json;
   } catch (e) {
     error.value = String(e)
   } finally {

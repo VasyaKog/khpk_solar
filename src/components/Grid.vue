@@ -72,7 +72,7 @@ const deadbandW = computed(() =>
 const flowW = computed(() => toNum(props.gridFlow));
 
 const mode = computed<GridMode>(() => {
-  if (!props.gridAvailable) return "offline";
+  if (!props.gridAvailable && props.gridFlow === 0) return "offline";
 
   const f = flowW.value;
   const db = deadbandW.value;

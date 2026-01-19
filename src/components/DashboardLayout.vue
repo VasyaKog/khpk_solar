@@ -5,6 +5,10 @@
       <Solar :solarPower="line1SolarPower" />
     </div>
 
+    <div class="cell logo-center">
+      <LogoHPK />
+    </div>
+
     <div class="cell solar-right">
       <Solar :solarPower="line2SolarPower" />
     </div>
@@ -47,6 +51,7 @@ import Grid from "./Grid.vue";
 import Load from "./Load.vue";
 import BatteryStatus from "./BatteryStatus.vue";
 import KhpkMain from "./KhpkMain.vue";
+import LogoHPK from "./LogoHPK.vue";
 
 
 defineProps<{
@@ -77,6 +82,10 @@ defineProps<{
 Твердження: ширини маленьких плиток керуються через --tile.
 */
 .dash {
+  height: 100%;
+  margin: auto;
+  align-content: space-evenly; /* розносить ряди по висоті */
+  row-gap: clamp(24px, 4vh, 64px);
   --tile: 150px; /* бажано щоб Solar/Grid/Load/Battery теж мали таку ширину */
   --centerW: clamp(320px, 34vw, 520px);
 
@@ -84,8 +93,6 @@ defineProps<{
   --gapY: clamp(14px, 2.2vw, 36px);
 
   width: max-content;
-  height: 100%;
-  min-height: 520px;
 
   display: grid;
   align-items: center;
@@ -105,7 +112,7 @@ defineProps<{
   grid-template-rows: auto auto auto;
 
   grid-template-areas:
-    ".  solar-left . center . solar-right  ."
+    ".  solar-left . logo-center . solar-right  ."
     "grid-left . load-left center load-right . grid-right"
     ". bat-left .     center .     bat-right .";
 }
@@ -124,6 +131,11 @@ defineProps<{
 .bat-right   { grid-area: bat-right; }
 
 .center      { grid-area: center; }
+.logo-center { grid-area: logo-center; }
+
+.center  {
+  width: 250%;
+}
 
 /* стабілізуємо поведінку елементів */
 .cell {

@@ -1,12 +1,11 @@
 @import './base.css';
 
-
-
 #app {
     font-weight: normal;
     background: url('/images/background.png') no-repeat center center fixed;
     background-size: cover;
     width: 100vw;
+    height: 100vh;
     padding: 2rem 2rem;
 }
 
@@ -24,14 +23,3 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-}
