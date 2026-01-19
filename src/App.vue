@@ -4,6 +4,7 @@
     <div v-if="!loading" class="error">
       <BatteryStatus :soc="100" :battery-flow="+2540"/>
       <Solar :solar-power-w="9500"/>
+      <Grid :grid-flow-w="-2000"/>
 
     </div>
     <div>
@@ -22,6 +23,7 @@ import VChart from 'vue-echarts'
 import LogoHPK from "./components/LogoHPK.vue";
 import BatteryStatus from "./components/BatteryStatus.vue";
 import Solar from "./components/Solar.vue";
+import Grid from "./components/Grid.vue";
 
 // register
 const vChart = VChart;
