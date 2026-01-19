@@ -4,7 +4,7 @@
     <div v-if="!loading" class="error">
       <BatteryStatus :soc="85" :battery-flow="+2540"/>
       <Solar :solar-power="28000"/>
-      <Grid :grid-flow-w="-2000"/>
+      <Grid :grid-flow="2000" :grid-available="false"/>
 
     </div>
     <div>
