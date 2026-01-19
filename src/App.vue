@@ -2,8 +2,8 @@
   <div class="container">
     <LogoHPK/>
     <div v-if="!loading" class="error">
-      <BatteryStatus :soc="100" :battery-flow="+2540"/>
-      <Solar :solar-power-w="9500"/>
+      <BatteryStatus :soc="85" :battery-flow="+2540"/>
+      <Solar :solar-power="28000"/>
       <Grid :grid-flow-w="-2000"/>
 
     </div>
