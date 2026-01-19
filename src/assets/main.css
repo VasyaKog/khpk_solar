@@ -3,10 +3,11 @@
 
 
 #app {
-    margin: 0 auto;
-    padding: 2rem;
     font-weight: normal;
     background: url('/images/background.png') no-repeat center center fixed;
+    background-size: cover;
+    width: 100vw;
+    padding: 2rem 2rem;
 }
 
 a,
@@ -32,6 +33,5 @@ a,
   #app {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
   }
 }

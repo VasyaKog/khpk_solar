@@ -1,63 +1,15 @@
 <template>
   <div class="container">
     <LogoHPK/>
+    <div v-if="!loading" class="error">
+      <BatteryStatus :soc="100" :battery-flow="+2540"/>
+      <Solar :solar-power-w="9500"/>
+
+    </div>
+    <div>
+
+    </div>
     <div class="header">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div style="font-size:26px; font-weight:700;">Енергосистема коледжу · Live</div>
-        <span v-if="demoMode" class="chip">DEMO</span>
-      </div>
-      <div class="muted" style="display:flex; align-items:center; gap:10px; font-size:13px;">
-        <span>Оновлено {{ lastUpdatedText }}</span>
-        <button class="btn" @click="toggleDemo()">{{ demoMode ? 'Вимкнути DEMО' : 'Увімкнути DEMО' }}</button>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 grid-cols-2 grid-cols-4">
-      <div class="card">
-        <div style="display:flex; justify-content:space-between;">
-          <div class="muted" style="font-size:13px;">PV (генерація DC)</div>
-          <div class="accent">☀️</div>
-        </div>
-        <div class="kpi" style="margin-top:8px;">{{ formatWatt(pvPower) }}</div>
-        <div class="muted" style="font-size:12px; margin-top:4px;">MPPT1–4 сумарно</div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex; justify-content:space-between;">
-          <div class="muted" style="font-size:13px;">Battery</div>
-          <div class="accent">{{ batteryPower > 0 ? '🔋↘️' : (batteryPower < 0 ? '🔋↗️' : '🔋') }}</div>
-        </div>
-        <div class="kpi" style="margin-top:8px;">{{ formatWatt(batteryPower) }}</div>
-        <div class="muted" style="font-size:12px; margin-top:4px;">SOC: {{ data?.soc ?? '—' }}% · {{ batteryPower < 0 ? 'заряд' : (batteryPower > 0 ? 'розряд' : '—') }}</div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex; justify-content:space-between;">
-          <div class="muted" style="font-size:13px;">Grid</div>
-          <div class="accent">{{ gridPower > 0 ? '↗️' : (gridPower < 0 ? '↘️' : '•') }}</div>
-        </div>
-        <div class="kpi" :class="gridPower>0 ? 'ok' : (gridPower<0 ? 'bad' : '')" style="margin-top:8px;">
-          {{ formatWatt(Math.abs(gridPower)) }}
-        </div>
-        <div class="muted" style="font-size:12px; margin-top:4px;">{{ gridPower>0 ? 'експорт у мережу' : (gridPower<0 ? 'імпорт з мережі' : 'баланс = 0') }}</div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex; justify-content:space-between;">
-          <div class="muted" style="font-size:13px;">Inverter</div>
-          <div class="accent">⚙️</div>
-        </div>
-        <div style="margin-top:8px; font-weight:600;">{{ statusText }}</div>
-        <div class="muted" style="font-size:12px; margin-top:4px;">Сьогодні: {{ toFixed(data?.yieldtoday,1) }} kWh · Всього: {{ toFixed(data?.yieldtotal,1) }} kWh</div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:16px;">
-      <div class="muted" style="font-size:13px; margin-bottom:8px;">15 хв тренд ({{ demoMode ? 'демо кожні 2с' : 'кожні 15с' }})</div>
-      <v-chart class="chart" :option="chartOption" autoresize style="height:320px; width:100%;" />
-    </div>
-
-    <div class="muted" style="font-size:12px; margin-top:12px;">
       <template v-if="demoMode">Режим демонстрації: синтетичні дані. Додайте ?tokenId=...&sn=... до URL або налаштуйте .env і використовуйте /api/solax/realtime.</template>
       <template v-else>Джерело: SolaX Cloud API v6.1 — LIVE.</template>
     </div>
@@ -68,6 +20,8 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import VChart from 'vue-echarts'
 import LogoHPK from "./components/LogoHPK.vue";
+import BatteryStatus from "./components/BatteryStatus.vue";
+import Solar from "./components/Solar.vue";
 
 // register
 const vChart = VChart;
@@ -138,43 +92,79 @@ function pushPoint(now, pv, load, grid, bat) {
 
 function startDemo() {
   stopAll()
-  const base = { load:2300, soc:62, yieldtoday:23.4, yieldtotal:17280, status:102 }
+
+  // Базові стани для двох інверторів
+  const base1 = { load: 2300, soc: 65, yieldtoday: 12.4, status: 102 }
+  const base2 = { load: 1800, soc: 45, yieldtoday: 8.2, status: 102 }
+
   const tick = () => {
     const now = new Date()
-    const hour = now.getHours() + now.getMinutes()/60
-    const daylight = Math.max(0, Math.sin(((hour-6)/12)*Math.PI))
-    const pv = Math.round(500 + 4500*daylight + (Math.random()-0.5)*200)
-    const load = Math.max(500, Math.round(base.load + (Math.random()-0.5)*300))
-    let bat=0, grid=0
-    if (pv > load) {
-      bat = -Math.min(1400, Math.round((pv-load)*0.5))
-      grid = Math.round((pv-load) - Math.abs(bat))
-    } else {
-      bat = Math.min(1500, Math.round((load-pv)*0.4))
-      grid = -Math.round((load-pv) - Math.max(0, bat))
+    const hour = now.getHours() + now.getMinutes() / 60
+    const daylight = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI))
+
+    const generateInverterDemo = (base, name) => {
+      const pv = Math.round((500 + 4500 * daylight + (Math.random() - 0.5) * 200))
+      const load = Math.max(500, Math.round(base.load + (Math.random() - 0.5) * 300))
+
+      let bat = 0, grid = 0
+      if (pv > load) {
+        bat = Math.min(1400, Math.round((pv - load) * 0.5))
+        grid = Math.round((pv - load) - Math.abs(bat))
+      } else {
+        bat = Math.min(1500, Math.round((load - pv) * 0.4))
+        grid = Math.round((load - pv) - Math.max(0, bat))
+      }
+
+      base.soc = Math.max(10, Math.min(95, base.soc - bat / 5000))
+      base.yieldtoday += pv / 100000 // Симуляція приросту за день
+
+      // Формуємо об'єкт згідно з новим InverterData.toJSON()
+      return {
+        name: name,
+        pvPower: pv,
+        batteryFlow: -bat, // +заряд, -розряд (як у вашому бекенді)
+        gridStatus: 1,
+        gridFlow: -grid,   // +імпорт, -експорт
+        consumption: load,
+        soc: Math.round(base.soc),
+        yieldToday: Number(base.yieldtoday.toFixed(2)),
+        importToday: Number((base.yieldtoday * 0.4).toFixed(2)),
+        exportToday: Number((base.yieldtoday * 0.1).toFixed(2)),
+        selfUseRate: 90
+      }
     }
-    base.soc = Math.max(10, Math.min(95, base.soc - bat/5000))
-    const result = {
-      inverterSN: 'DEMO123456',
-      sn: 'DEMO-DONGLE-001',
-      acpower: Math.max(0, pv - Math.max(0,-grid) - Math.max(0,-bat) + Math.max(0,grid) + Math.max(0,bat)),
-      yieldtoday: base.yieldtoday + Math.max(0, pv)/100000,
-      yieldtotal: base.yieldtotal + Math.max(0, pv)/100000,
-      feedinpower: grid,
-      soc: Math.round(base.soc),
-      inverterStatus: base.status,
-      uploadTime: now.toISOString().slice(0,19).replace('T',' '),
-      batPower: bat,
-      powerdc1: Math.round(pv*0.55),
-      powerdc2: Math.round(pv*0.35),
-      powerdc3: Math.round(pv*0.07),
-      powerdc4: Math.round(pv*0.03),
+
+    const inv1 = generateInverterDemo(base1, 'Лінія 1')
+    const inv2 = generateInverterDemo(base2, 'Лінія 2')
+    const inverters = [inv1, inv2]
+
+    // Розрахунок total
+    const total = {
+      pvPower: inv1.pvPower + inv2.pvPower,
+      consumption: inv1.consumption + inv2.consumption,
+      batteryFlow: inv1.batteryFlow + inv2.batteryFlow,
+      gridFlow: inv1.gridFlow + inv2.gridFlow,
+      soc: Math.round((inv1.soc + inv2.soc) / 2),
+      yieldToday: Number((inv1.yieldToday + inv2.yieldToday).toFixed(2)),
+      importToday: Number((inv1.importToday + inv2.importToday).toFixed(2)),
+      exportToday: Number((inv1.exportToday + inv2.exportToday).toFixed(2)),
+      selfUseRate: 90
     }
-    data.value = result
+
+    data.value = {
+      success: true,
+      timestamp: now.toISOString(),
+      total: total,
+      inverters: inverters,
+    }
+
+    console.log('Fetched data:', data.value)
+
     lastUpdated.value = now
-    pushPoint(now, pv, load, grid, bat)
+    pushPoint(now, total.pvPower, total.consumption, total.gridFlow, total.batteryFlow)
     loading.value = false
   }
+
   tick()
   intervalDemo.value = setInterval(tick, 2000)
 }
