@@ -4,11 +4,11 @@
 
 <template>
 <div class="logo-hpk">
-  <img src="/images/logo-hpk.png" alt="Logo HPK" style="width:30%;" /><br/>
+  <span class="title">Бережіть електричну енергію</span><br/>
+  <img src="/images/logo-hpk.png" alt="Logo HPK" style="width:30%;" />
 </div>
 </template>
 
 <style scoped>
 .logo-hpk {text-align: center;}
-.title {font-size: 2.5rem;}
 </style>

@@ -1,8 +1,12 @@
 <template>
-  <div class="dash">
+  <div class="main">
+    <div class="dash">
     <!-- top: solar L/R -->
     <div class="cell solar-left">
-      <Solar :solarPower="line1SolarPower" />
+      <Solar
+          :solarPower="line1SolarPower"
+          :inverterName="line1Name"
+      />
     </div>
 
     <div class="cell logo-center">
@@ -10,12 +14,25 @@
     </div>
 
     <div class="cell solar-right">
-      <Solar :solarPower="line2SolarPower" />
+      <Solar
+          :solarPower="line2SolarPower"
+          :inverterName="line2Name"
+      />
     </div>
 
     <!-- middle: grid L/R + load L/R + center -->
     <div class="cell grid-left">
       <Grid :gridAvailable="!!line1GridAvailable" :gridFlow="line1GridFlow" />
+    </div>
+
+    <div class="cell node-left">
+      <EnergyFlowNode
+          :isRight="0"
+          :gridAvailable="line1GridAvailable"
+          :gridFlow="line1GridFlow"
+          :batteryFlow="line1BatteryFlow"
+          :solarPower="line1SolarPower"
+      />
     </div>
 
     <div class="cell load-left">
@@ -28,6 +45,16 @@
 
     <div class="cell load-right">
       <Load :loadPower="line2LoadPower" />
+    </div>
+
+    <div class="cell node-right">
+      <EnergyFlowNode
+          :isRight="1"
+          :gridAvailable="line2GridAvailable"
+          :gridFlow="line2GridFlow"
+          :batteryFlow="line2BatteryFlow"
+          :solarPower="line2SolarPower"
+      />
     </div>
 
     <div class="cell grid-right">
@@ -43,6 +70,10 @@
       <BatteryStatus :soc="line2BatterySoc" :batteryFlow="line2BatteryFlow" />
     </div>
   </div>
+  </div>
+<!--  <div class="footer">-->
+
+<!--  </div>-->
 </template>
 
 <script setup lang="ts">
@@ -52,9 +83,12 @@ import Load from "./Load.vue";
 import BatteryStatus from "./BatteryStatus.vue";
 import KhpkMain from "./KhpkMain.vue";
 import LogoHPK from "./LogoHPK.vue";
+import EnergyFlowNode from "./EnergyFlowNode.vue";
 
 
 defineProps<{
+  line1Name?: string | null;
+  line2Name?: string | null;
   line1SolarPower: number;
   line2SolarPower: number;
 
@@ -86,7 +120,7 @@ defineProps<{
   margin: auto;
   align-content: space-evenly; /* розносить ряди по висоті */
   row-gap: clamp(24px, 4vh, 64px);
-  --tile: 150px; /* бажано щоб Solar/Grid/Load/Battery теж мали таку ширину */
+  --tile: 180px; /* бажано щоб Solar/Grid/Load/Battery теж мали таку ширину */
   --centerW: clamp(320px, 34vw, 520px);
 
   --gapX: clamp(18px, 3vw, 48px);
@@ -113,7 +147,7 @@ defineProps<{
 
   grid-template-areas:
     ".  solar-left . logo-center . solar-right  ."
-    "grid-left . load-left center load-right . grid-right"
+    "grid-left node-left load-left center load-right node-right grid-right"
     ". bat-left .     center .     bat-right .";
 }
 
@@ -127,14 +161,18 @@ defineProps<{
 .load-left   { grid-area: load-left; }
 .load-right  { grid-area: load-right; }
 
+.node-left   { grid-area: node-left; }
+.node-right  { grid-area: node-right; }
+
 .bat-left    { grid-area: bat-left; }
 .bat-right   { grid-area: bat-right; }
 
-.center      { grid-area: center; }
 .logo-center { grid-area: logo-center; }
+.center      { grid-area: center; }
+
 
 .center  {
-  width: 250%;
+  width: 150%;
 }
 
 /* стабілізуємо поведінку елементів */
@@ -155,6 +193,9 @@ defineProps<{
     grid-template-columns: 1fr;
     grid-template-areas:
       "center"
+      "logo-center"
+      "node-left"
+      "node-right"
       "solar-left"
       "solar-right"
       "load-left"
@@ -164,5 +205,10 @@ defineProps<{
       "grid-left"
       "grid-right";
   }
+}
+
+.main {
+  height: 100%;
+  width: 100%;
 }
 </style>

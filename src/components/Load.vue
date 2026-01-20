@@ -7,9 +7,9 @@
     </div>
 
     <div class="glyph" :aria-label="`Load ${powerDisplay}`">
-      <div class="load-card">
+      <div class="card">
         <!-- icon set: lamp + laptop + router -->
-        <svg class="load-ico pc" viewBox="0 0 160 120" aria-hidden="true">
+        <svg class="ico pc" viewBox="0 0 160 120" aria-hidden="true">
           <!-- Monitor -->
           <rect x="16" y="14" width="88" height="54" rx="6" class="pc-screen"/>
           <rect x="52" y="70" width="16" height="10" class="pc-stand"/>
@@ -65,8 +65,8 @@ const available = computed(() => true);
 const mode = computed<LoadMode>(() => (available.value ? "online" : "offline"));
 const modeClass = computed(() => `mode-${mode.value}`);
 
-const statusLabel = computed(() => props.statusLabel ?? "Load");
-const offlineText = computed(() => props.offlineText ?? "OFF");
+const statusLabel = computed(() => props.statusLabel ?? "Навантаження");
+const offlineText = computed(() => props.offlineText ?? "Вимкнено");
 
 const titleText = computed(() => (props.title ?? "").trim());
 
@@ -80,7 +80,7 @@ const powerDisplay = computed(() => {
 
 <style scoped>
 .load-mini {
-  --w: 150px;
+  --w: 180px;
   width: var(--w);
   display: grid;
   grid-template-rows: 28px auto;
@@ -88,19 +88,6 @@ const powerDisplay = computed(() => {
   user-select: none;
   color: #0f172a;
   font-variant-numeric: tabular-nums;
-}
-
-/* glass */
-.glass {
-  padding: 12px 10px 14px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow:
-      0 10px 30px rgba(15, 23, 42, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 /* status */
@@ -116,7 +103,6 @@ const powerDisplay = computed(() => {
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.01em;
 }
@@ -126,37 +112,8 @@ const powerDisplay = computed(() => {
 /* glyph */
 .glyph { display: grid; justify-items: center; }
 
-.load-card {
-  width: 118px;
-  height: 118px;
-  border-radius: 18px;
-  border: 3px solid rgba(15, 23, 42, 0.18);
-  background: rgba(226, 232, 240, 0.55);
-  position: relative;
-  overflow: hidden;
-}
-
 /* icon */
-.load-ico {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  top: 18px;
-  height: 64px;
-  opacity: 0.95;
-  z-index: 2;
-}
 
-/* PC icon specific */
-.load-ico.pc {
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  top: 14px;
-  height: 72px;
-  opacity: 0.95;
-  z-index: 2;
-}
 
 /* monitor */
 .pc-screen {
@@ -200,20 +157,6 @@ const powerDisplay = computed(() => {
 }
 
 /* power */
-.power {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 10px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  z-index: 5;
-  color: #0f172a;
-  text-shadow:
-      0 2px 6px rgba(255,255,255,0.9),
-      0 0 1px rgba(255,255,255,0.8);
-}
 
 .power .offline {
   font-size: 16px;

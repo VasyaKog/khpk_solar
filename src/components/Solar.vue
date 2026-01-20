@@ -1,4 +1,7 @@
 <template>
+  <div class="title" v-if="inverterName">
+    {{ inverterName }}
+  </div>
   <div class="solar-mini glass" :class="modeClass" role="group" aria-label="Solar status">
     <!-- status row (fixed height) -->
     <div class="status" :title="modeLabel">
@@ -8,7 +11,7 @@
 
     <!-- glyph -->
     <div class="glyph" :aria-label="`Solar power ${powerDisplay}`">
-      <div class="panel-card">
+      <div class="card">
         <!-- BIG sun (clear meaning) -->
         <div class="sun" aria-hidden="true">
           <span class="sun-emoji">☀️</span>
@@ -16,7 +19,7 @@
         </div>
 
         <!-- panels pictogram -->
-        <svg class="panel-ico" viewBox="0 0 120 90" aria-hidden="true">
+        <svg class="ico" viewBox="0 0 120 90" aria-hidden="true">
           <rect x="10" y="18" width="100" height="48" rx="10" class="p-frame" />
           <path d="M20 28H100 M20 38H100 M20 48H100 M20 58H100" class="p-grid" />
           <path d="M30 18V66 M45 18V66 M60 18V66 M75 18V66 M90 18V66" class="p-grid" />
@@ -42,6 +45,7 @@ import { computed } from "vue";
 type SolarMode = "active" | "idle";
 
 const props = defineProps<{
+  inverterName?: string | null;
   /** Solar power in Watts (W) */
   solarPower: number | string;
 
@@ -58,8 +62,8 @@ const toNum = (v: unknown) => {
 };
 
 const labels = computed<Record<SolarMode, string>>(() => ({
-  active: props.labels?.active ?? "Solar",
-  idle: props.labels?.idle ?? "No sun",
+  active: props.labels?.active ?? "Сонце",
+  idle: props.labels?.idle ?? "Без сонця",
 }));
 
 const deadbandW = computed(() => (Number.isFinite(props.deadbandW) ? props.deadbandW! : 30));
@@ -82,7 +86,7 @@ const powerDisplay = computed(() => {
 
 <style scoped>
 .solar-mini {
-  --w: 150px;
+  --w: 180px;
   width: var(--w);
   display: grid;
   grid-template-rows: 28px auto;
@@ -92,20 +96,6 @@ const powerDisplay = computed(() => {
   font-variant-numeric: tabular-nums;
 }
 
-/* glass container (same as BatteryMini) */
-.glass {
-  padding: 12px 10px 14px;
-  border-radius: 22px;
-
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow:
-      0 10px 30px rgba(15, 23, 42, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
 
 /* status */
 .status {
@@ -122,7 +112,6 @@ const powerDisplay = computed(() => {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 
-  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.01em;
 }
@@ -135,16 +124,6 @@ const powerDisplay = computed(() => {
   justify-items: center;
 }
 
-.panel-card {
-  width: 118px;
-  height: 118px;
-  border-radius: 18px;
-  border: 3px solid rgba(15, 23, 42, 0.18);
-  background: rgba(226, 232, 240, 0.55);
-  position: relative;
-  overflow: hidden;
-}
-
 /* Big sun */
 .sun {
   position: absolute;
@@ -152,12 +131,14 @@ const powerDisplay = computed(() => {
   left: 0;
   right: 0;
   display: grid;
-  place-items: center;
+  place-items: end;
   z-index: 4;
 }
 .sun-emoji {
-  font-size: 26px;
+  font-size: 60px;
+  text-align: left;
   line-height: 1;
+  : end;
 }
 .sun-glow {
   position: absolute;
@@ -170,15 +151,6 @@ const powerDisplay = computed(() => {
 }
 
 /* panels pictogram */
-.panel-ico {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  top: 25px;   /* leave space for big sun */
-  height: 58px;
-  opacity: 0.95;
-  z-index: 2;
-}
 .p-frame {
   fill: rgba(15, 23, 42, 0.08);
   stroke: rgba(15, 23, 42, 0.35);
@@ -191,23 +163,6 @@ const powerDisplay = computed(() => {
 }
 .p-stand {
   fill: rgba(15, 23, 42, 0.25);
-}
-
-/* power moved lower */
-.power {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 10px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  z-index: 5;
-
-  color: #0f172a;
-  text-shadow:
-      0 2px 6px rgba(255, 255, 255, 0.9),
-      0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 /* subtle shimmer when active */

@@ -4,14 +4,14 @@
     <div class="stage" :style="bgStyle" aria-hidden="true"></div>
 
     <!-- metric under image -->
-    <div class="metric">
-      <div class="kw">{{ loadDisplay }}</div>
-      <div class="hint">
-        <span v-if="todayKwh != null">{{ todayDisplay }}</span>
-        <span v-if="todayKwh != null && peakKw != null" class="sep">•</span>
-        <span v-if="peakKw != null">Peak {{ peakDisplay }}</span>
-      </div>
-    </div>
+<!--    <div class="metric">-->
+<!--      <div class="kw">{{ loadDisplay }}</div>-->
+<!--      <div class="hint">-->
+<!--        <span v-if="todayKwh != null">{{ todayDisplay }}</span>-->
+<!--        <span v-if="todayKwh != null && peakKw != null" class="sep">•</span>-->
+<!--        <span v-if="peakKw != null">Peak {{ peakDisplay }}</span>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -63,8 +63,8 @@ const bgStyle = computed(() => ({
 
 <style scoped>
 .college-center {
-  --w: 360px;
-  --stage-h: 190px;
+  --w: 500px;
+  --stage-h: 333px;
 
   width: var(--w);
   display: grid;

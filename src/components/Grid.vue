@@ -8,9 +8,9 @@
 
     <!-- glyph -->
     <div class="glyph">
-      <div class="grid-card">
+      <div class="card">
         <!-- icon -->
-        <svg class="grid-ico" viewBox="0 0 120 120" aria-hidden="true">
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true">
           <path
               d="M60 14 L78 92 H70 L66 76 H54 L50 92 H42 Z
                M52 44 H68
@@ -32,7 +32,7 @@
         <!-- power -->
         <div class="power">
           <span v-if="mode !== 'offline'">{{ powerDisplay }}</span>
-          <span v-else class="offline">NO GRID</span>
+          <span v-else class="offline">Без мережі</span>
         </div>
 
         <div v-if="mode === 'import' || mode === 'export'" class="shine"></div>
@@ -59,10 +59,10 @@ const toNum = (v: unknown) => {
 };
 
 const labels = computed<Record<GridMode, string>>(() => ({
-  import: props.labels?.import ?? "Import",
-  export: props.labels?.export ?? "Export",
-  idle: props.labels?.idle ?? "Grid",
-  offline: props.labels?.offline ?? "No grid",
+  import: props.labels?.import ?? "Імпорт",
+  export: props.labels?.export ?? "Експрот",
+  idle: props.labels?.idle ?? "Мережа",
+  offline: props.labels?.offline ?? "Без мережі",
 }));
 
 const deadbandW = computed(() =>
@@ -77,8 +77,8 @@ const mode = computed<GridMode>(() => {
   const f = flowW.value;
   const db = deadbandW.value;
 
-  if (f > db) return "import";
-  if (f < -db) return "export";
+  if (f < db) return "import";
+  if (f > -db) return "export";
   return "idle";
 });
 
@@ -108,7 +108,7 @@ const powerDisplay = computed(() => {
 
 <style scoped>
 .grid-mini {
-  --w: 150px;
+  --w: 180px;
   width: var(--w);
   display: grid;
   grid-template-rows: 28px auto;
@@ -118,17 +118,6 @@ const powerDisplay = computed(() => {
   font-variant-numeric: tabular-nums;
 }
 
-/* glass container */
-.glass {
-  padding: 12px 10px 14px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18),
-  inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
 
 /* status */
 .status {
@@ -143,7 +132,6 @@ const powerDisplay = computed(() => {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.01em;
 }
@@ -162,16 +150,6 @@ const powerDisplay = computed(() => {
 .glyph {
   display: grid;
   justify-items: center;
-}
-
-.grid-card {
-  width: 118px;
-  height: 118px;
-  border-radius: 18px;
-  border: 3px solid rgba(15, 23, 42, 0.18);
-  background: rgba(226, 232, 240, 0.55);
-  position: relative;
-  overflow: hidden;
 }
 
 /* icon */
@@ -197,21 +175,6 @@ const powerDisplay = computed(() => {
   stroke-width: 2;
   fill: none;
   stroke-linecap: round;
-}
-
-/* power at bottom */
-.power {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 10px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  z-index: 5;
-  color: #0f172a;
-  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.9),
-  0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 /* shimmer */

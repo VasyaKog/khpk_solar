@@ -149,33 +149,37 @@ class SolarManager extends EventEmitter {
     }
 
     updateInverter(sn, data, name) {
-        const now = Date.now();
-        const previous = this.states.get(sn);
-        const current = new InverterData(data, name);
+        try {
+            const now = Date.now();
+            const previous = this.states.get(sn);
+            const current = new InverterData(data, name);
 
-        console.log(JSON.stringify(current));
+            console.log(JSON.stringify(current));
 
-        // Оновлюємо поточний стан та очищуємо помилки
-        this.states.set(sn, current);
-        this.errors.delete(sn);
+            // Оновлюємо поточний стан та очищуємо помилки
+            this.states.set(sn, current);
+            this.errors.delete(sn);
 
-        // Зберігаємо в історію
-        if (!this.history.has(sn)) this.history.set(sn, []);
-        const snHistory = this.history.get(sn);
-        snHistory.push({t: now, data: current});
+            // Зберігаємо в історію
+            if (!this.history.has(sn)) this.history.set(sn, []);
+            const snHistory = this.history.get(sn);
+            snHistory.push({t: now, data: current});
 
-        const cutoff = now - this.MAX_HISTORY_MS;
-        while (snHistory.length > 0 && snHistory[0].t < cutoff) {
-            snHistory.shift();
+            const cutoff = now - this.MAX_HISTORY_MS;
+            while (snHistory.length > 0 && snHistory[0].t < cutoff) {
+                snHistory.shift();
+            }
+
+            // Аналітика та реактивність
+            // if (previous) {
+            //     this.checkAnomalies(previous, current);
+            // }
+
+
+            this.emit('update', {sn, current});
+        } catch (e) {
+            console.error(`Error updating inverter ${sn}: ${e}`);
         }
-
-        // Аналітика та реактивність
-        // if (previous) {
-        //     this.checkAnomalies(previous, current);
-        // }
-
-
-        this.emit('update', {sn, current});
     }
 
     setInverterError(sn, name, error) {
@@ -248,6 +252,8 @@ app.get('/api/solax/realtime',
             //     totalSelfUseRate = ((totalStats.yieldToday - totalActualExport) / totalStats.yieldToday) * 100;
             // }
 
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             res.json({
                 success: true,
                 timestamp: new Date().toISOString(),
@@ -269,16 +275,12 @@ app.get('/api/solax/realtime',
             res.status(500).json({success: false, exception: String(e)})
         }
     });
-// Serve built files if present
-const distDir = path.join(__dirname, 'dist')
-app.use(express.static(distDir))
 
-const publicDir = path.join(__dirname, 'public')
-app.use(express.static(publicDir))
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(distDir, 'index.html'))
-})
+app.get('/',
+    async (req, res) => {
+        res.json({success: true, message: 'Hello from Solax API'})
+    }
+)
 
 app.listen(PORT, () => {
     console.log('Server listening on http://0.0.0.0:' + PORT)

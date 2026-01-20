@@ -61,9 +61,9 @@ const props = defineProps<{
 }>();
 
 const labels = computed<Record<BatteryMode, string>>(() => ({
-  charge: props.labels?.charge ?? "Charging",
-  discharge: props.labels?.discharge ?? "Discharging",
-  idle: props.labels?.idle ?? "Idle",
+  charge: props.labels?.charge ?? "Зарядка",
+  discharge: props.labels?.discharge ?? "Розряд",
+  idle: props.labels?.idle ?? "Очікування",
 }));
 
 const socClamped = computed(() => {
@@ -107,7 +107,7 @@ const levelStyle = computed(() => ({
 <style scoped>
 /* compact, controllable sizes */
 .battery-mini {
-  --w: 150px;      /* overall width */
+  --w: 180px;      /* overall width */
   --body-w: 96px;  /* battery width */
   --body-h: 150px; /* battery height */
   --cap-w: 44px;
@@ -151,7 +151,6 @@ const levelStyle = computed(() => ({
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 
-  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.01em;
 }

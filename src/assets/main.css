@@ -1,12 +1,12 @@
 @import './base.css';
 
 #app {
-    font-weight: normal;
+    font-weight: bold;
     background: url('/images/background.png') no-repeat center center fixed;
     background-size: cover;
     width: 100vw;
     height: 100vh;
-    padding: 2rem 2rem;
+    padding: 1rem 1rem;
 }
 
 a,
@@ -15,6 +15,66 @@ a,
   color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
   padding: 3px;
+}
+
+/* glass container */
+.glass {
+    padding: 5px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.status {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.power {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    z-index: 5;
+    color: #0f172a;
+    text-shadow:
+            0 2px 6px rgba(255,255,255,0.9),
+            0 0 1px rgba(255,255,255,0.8);
+}
+
+.ico {
+    position: absolute;
+    left: 5px;
+    right: 10px;
+    top: 4px;
+    height: 118px;
+    opacity: 0.95;
+    z-index: 2;
+}
+
+.card {
+    width: 160px;
+    height: 160px;
+    border-radius: 18px;
+    border: 3px solid rgba(15, 23, 42, 0.18);
+    background: rgba(226, 232, 240, 0.55);
+    position: relative;
+    overflow: hidden;
+}
+
+.title {
+    line-height: 50px;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    color: #000;
+    font-weight: 1000;
 }
 
 @media (hover: hover) {

@@ -1,6 +1,8 @@
 <template>
-    <template v-if="!loading && data.inverters.length == 2">
+    <template v-if="!loading && data.inverters && data.inverters.length == 2">
       <DashboardLayout
+          :line1Name="data.inverters[0].name"
+          :line2Name="data.inverters[1].name"
           :line1SolarPower="data.inverters[0]?.pvPower"
           :line2SolarPower="data.inverters[1]?.pvPower"
           :line1GridFlow="data.inverters[0]?.gridFlow"
@@ -24,13 +26,9 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import VChart from 'vue-echarts'
-import LogoHPK from "./components/LogoHPK.vue";
 import DashboardLayout from "./components/DashboardLayout.vue";
-
-// register
-const vChart = VChart;
-
+const VITE_API_DATA_URL = import.meta.env.VITE_API_DATA_URL;
+const VITE_DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE;
 
 const STATUS_MAP = {
   100: 'Wait Mode',
@@ -56,11 +54,10 @@ const lastUpdated = ref(null)
 const series = ref([]) // {t,pv,load,grid,bat}
 
 const { tokenId, sn } = useQuery()
-const demoMode = ref(false)
+const demoMode = ref(VITE_DATA_SOURCE != 'prod')
 
 const intervalDemo = ref(null)
 const intervalLive = ref(null)
-
 
 function startDemo() {
   stopAll()
@@ -95,9 +92,9 @@ function startDemo() {
         name: name,
         pvPower: pv,
         batteryFlow: -bat, // +заряд, -розряд (як у вашому бекенді)
-        gridStatus: 1,
-        gridFlow: -grid,   // +імпорт, -експорт
-        consumption: load,
+        gridStatus: 0,
+        gridFlow: -10000,
+        consumption: 2500,
         soc: Math.round(base.soc),
         yieldToday: Number(base.yieldtoday.toFixed(2)),
         importToday: Number((base.yieldtoday * 0.4).toFixed(2)),
@@ -130,7 +127,6 @@ function startDemo() {
       inverters: inverters,
     }
 
-    console.log('Fetched data:', data.value)
 
     lastUpdated.value = now
     loading.value = false
@@ -142,8 +138,8 @@ function startDemo() {
 
 async function fetchOnce() {
   try {
-    const url = `http://localhost:8787/api/solax/realtime`
-    const r = await fetch(url, { cache: 'no-store' })
+    const url = VITE_API_DATA_URL;
+    const r = await fetch(url, { cache: 'no-store',  })
     if (!r.ok) throw new Error('HTTP '+r.status)
     const json = await r.json();
     data.value = json;
