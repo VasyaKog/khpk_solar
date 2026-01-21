@@ -186,14 +186,8 @@ const powerDisplay = computed(() => {
       rgba(59, 130, 246, 0.16) 50%,
       rgba(59, 130, 246, 0) 65%
   );
-  animation: shineMove 2.8s linear infinite;
   z-index: 1;
   opacity: 0.9;
-}
-
-@keyframes shineMove {
-  from { transform: translateX(-20%); }
-  to { transform: translateX(20%); }
 }
 
 /* mode colors */
@@ -218,7 +212,4 @@ const powerDisplay = computed(() => {
   color: #ef4444;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .shine { animation: none; display: none; }
-}
 </style>

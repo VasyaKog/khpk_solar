@@ -174,13 +174,8 @@ const powerDisplay = computed(() => {
       rgba(34, 197, 94, 0.12) 50%,
       rgba(34, 197, 94, 0) 65%
   );
-  animation: shineMove 3.2s linear infinite;
   z-index: 1;
   opacity: 0.9;
-}
-@keyframes shineMove {
-  from { transform: translateX(-20%); }
-  to { transform: translateX(20%); }
 }
 
 /* mode colors */
@@ -188,7 +183,4 @@ const powerDisplay = computed(() => {
 .mode-offline .dot { background: #ef4444; } /* red */
 .mode-offline .load-card { background: rgba(226, 232, 240, 0.35); }
 
-@media (prefers-reduced-motion: reduce) {
-  .shine { animation: none; display: none; }
-}
 </style>

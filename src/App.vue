@@ -186,7 +186,7 @@ onBeforeUnmount(() => stopAll())
 
 // Chart Option
 const chartOption = computed(() => ({
-  animation: true,
+  animation: false,
   backgroundColor: 'transparent',
   grid: { left: 30, right: 10, top: 10, bottom: 25 },
   tooltip: { trigger: 'axis', valueFormatter: (v) => formatWatt(v) },

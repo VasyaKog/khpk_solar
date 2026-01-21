@@ -173,20 +173,12 @@ const powerDisplay = computed(() => {
       rgba(245, 158, 11, 0.18) 50%,
       rgba(245, 158, 11, 0) 65%
   );
-  animation: shineMove 2.8s linear infinite;
   z-index: 1;
   opacity: 0.9;
-}
-@keyframes shineMove {
-  from { transform: translateX(-20%); }
-  to { transform: translateX(20%); }
 }
 
 /* mode colors */
 .mode-active .dot { background: #f59e0b; } /* amber */
 .mode-idle .dot { background: #94a3b8; }   /* gray */
 
-@media (prefers-reduced-motion: reduce) {
-  .shine { animation: none; display: none; }
-}
 </style>
