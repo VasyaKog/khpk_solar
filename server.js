@@ -102,6 +102,7 @@ class InverterData {
 
 
         return {
+            sn: this.sn,
             name: this.inverterName,
 
             pvPower: this.pvPowerTotal,
@@ -182,6 +183,10 @@ class SolarManager extends EventEmitter {
         }
     }
 
+    clearInverter(sn) {
+        this.states.set(sn, null);
+    }
+
     setInverterError(sn, name, error) {
         this.errors.set(sn, {
             name,
@@ -216,11 +221,20 @@ const solarManager = new SolarManager();
 setInterval(async () => {
     const data1 = await fetchSolaxData(SOLAX_TOKEN_ID, SOLAX_SN_1)
 
-    solarManager.updateInverter(SOLAX_SN_1, data1.result, SOLAX_NAME_1);
+    if (data1) {
+        solarManager.updateInverter(SOLAX_SN_1, data1.result, SOLAX_NAME_1);
+    } else {
+        solarManager.clearInverter(SOLAX_SN_1);
+    }
+
 
     const data2 = await fetchSolaxData(SOLAX_TOKEN_ID, SOLAX_SN_2)
 
-    solarManager.updateInverter(SOLAX_SN_2, data2.result, SOLAX_NAME_2);
+    if (data2) {
+        solarManager.updateInverter(SOLAX_SN_2, data2.result, SOLAX_NAME_2);
+    } else {
+        solarManager.clearInverter(SOLAX_SN_2);
+    }
 
 }, SOLAX_UPDATE_INTERVAL_SECONDS * 1000);
 

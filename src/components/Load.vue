@@ -1,5 +1,5 @@
 <template>
-  <div class="load-mini glass" :class="modeClass" role="group" aria-label="Load status">
+  <div class="load-mini glass" :class="[modeClass, {'is-disabled blur': isDisabled}]" role="group" aria-label="Load status">
     <!-- status (always present) -->
     <div class="status" :title="statusLabel">
       <span class="dot" aria-hidden="true"></span>
@@ -42,6 +42,7 @@ import { computed } from "vue";
 type LoadMode = "online" | "offline";
 
 const props = defineProps<{
+  isDisabled?: boolean | null;
   /** Load power in Watts (W) */
   loadPower: number | string;
 

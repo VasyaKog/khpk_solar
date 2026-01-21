@@ -1,5 +1,5 @@
 <template>
-  <div class="battery-mini glass" :class="modeClass" role="group" aria-label="Battery status">
+  <div class="battery-mini glass" :class="[modeClass, {'is-disabled blur': isDisabled}]" role="group" aria-label="Battery status">
     <!-- status row (fixed height) -->
     <div class="status" :title="modeLabel">
       <span class="dot" aria-hidden="true"></span>
@@ -42,6 +42,7 @@ type BatteryMode = "charge" | "discharge" | "idle";
 const props = defineProps<{
   /** SOC in % */
   soc: number;
+  isDisabled?: boolean;
 
   /**
    * batteryFlow in Watts (W)

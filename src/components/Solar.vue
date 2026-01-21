@@ -2,7 +2,7 @@
   <div class="title" v-if="inverterName">
     {{ inverterName }}
   </div>
-  <div class="solar-mini glass" :class="modeClass" role="group" aria-label="Solar status">
+  <div class="solar-mini glass" :class="[modeClass, {'is-disabled blur': isDisabled}]" role="group" aria-label="Solar status">
     <!-- status row (fixed height) -->
     <div class="status" :title="modeLabel">
       <span class="dot" aria-hidden="true"></span>
@@ -45,6 +45,7 @@ import { computed } from "vue";
 type SolarMode = "active" | "idle";
 
 const props = defineProps<{
+  isDisabled?: boolean | null;
   inverterName?: string | null;
   /** Solar power in Watts (W) */
   solarPower: number | string;

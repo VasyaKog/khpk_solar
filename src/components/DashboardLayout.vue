@@ -4,6 +4,7 @@
     <!-- top: solar L/R -->
     <div class="cell solar-left">
       <Solar
+          :isDisabled="line1Disabled"
           :solarPower="line1SolarPower"
           :inverterName="line1Name"
       />
@@ -15,6 +16,7 @@
 
     <div class="cell solar-right">
       <Solar
+          :isDisabled="line2Disabled"
           :solarPower="line2SolarPower"
           :inverterName="line2Name"
       />
@@ -22,11 +24,16 @@
 
     <!-- middle: grid L/R + load L/R + center -->
     <div class="cell grid-left">
-      <Grid :gridAvailable="!!line1GridAvailable" :gridFlow="line1GridFlow" />
+      <Grid
+          :isDisabled="line1Disabled"
+          :gridAvailable="!!line1GridAvailable"
+          :gridFlow="line1GridFlow"
+      />
     </div>
 
     <div class="cell node-left">
       <EnergyFlowNode
+          :isDisabled="line1Disabled"
           :isRight="0"
           :gridAvailable="line1GridAvailable"
           :gridFlow="line1GridFlow"
@@ -36,7 +43,9 @@
     </div>
 
     <div class="cell load-left">
-      <Load :loadPower="line1LoadPower" />
+      <Load :isDisabled="line1Disabled"
+           :loadPower="line1LoadPower"
+      />
     </div>
 
     <div class="cell center">
@@ -44,11 +53,15 @@
     </div>
 
     <div class="cell load-right">
-      <Load :loadPower="line2LoadPower" />
+      <Load
+          :isDisabled="line2Disabled"
+          :loadPower="line2LoadPower"
+      />
     </div>
 
     <div class="cell node-right">
       <EnergyFlowNode
+          :isDisabled="line2Disabled"
           :isRight="1"
           :gridAvailable="line2GridAvailable"
           :gridFlow="line2GridFlow"
@@ -58,16 +71,28 @@
     </div>
 
     <div class="cell grid-right">
-      <Grid :gridAvailable="!!line2GridAvailable" :gridFlow="line2GridFlow" />
+      <Grid
+          :isDisabled="line2Disabled"
+          :gridAvailable="!!line2GridAvailable"
+          :gridFlow="line2GridFlow"
+      />
     </div>
 
     <!-- bottom: battery L/R -->
     <div class="cell bat-left">
-      <BatteryStatus :soc="line1BatterySoc" :batteryFlow="line1BatteryFlow" />
+      <BatteryStatus
+          :isDisabled="line1Disabled"
+          :soc="line1BatterySoc"
+          :batteryFlow="line1BatteryFlow"
+      />
     </div>
 
     <div class="cell bat-right">
-      <BatteryStatus :soc="line2BatterySoc" :batteryFlow="line2BatteryFlow" />
+      <BatteryStatus
+          :isDisabled="line2Disabled"
+          :soc="line2BatterySoc"
+          :batteryFlow="line2BatteryFlow"
+      />
     </div>
   </div>
   </div>
@@ -84,9 +109,12 @@ import BatteryStatus from "./BatteryStatus.vue";
 import KhpkMain from "./KhpkMain.vue";
 import LogoHPK from "./LogoHPK.vue";
 import EnergyFlowNode from "./EnergyFlowNode.vue";
+import {computed} from "vue";
 
 
-defineProps<{
+const props = defineProps<{
+  line1Enabled?: boolean;
+  line2Enabled?: boolean;
   line1Name?: string | null;
   line2Name?: string | null;
   line1SolarPower: number;
@@ -108,6 +136,10 @@ defineProps<{
   khpkTotalLoad: number;
   khkpBGUrl: string;
 }>();
+
+const line1Disabled = computed(() => !props.line1Enabled);
+const line2Disabled = computed(() => !props.line2Enabled);
+
 </script>
 
 <style scoped>

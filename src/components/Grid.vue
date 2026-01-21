@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-mini glass" :class="modeClass" role="group" aria-label="Grid status">
+  <div class="grid-mini glass" :class="[modeClass, {'is-disabled blur': isDisabled}]" role="group" aria-label="Grid status">
     <!-- status -->
     <div class="status" :title="modeLabel">
       <span class="dot" aria-hidden="true"></span>
@@ -47,6 +47,7 @@ import { computed } from "vue";
 type GridMode = "import" | "export" | "idle" | "offline";
 
 const props = defineProps<{
+  isDisabled?: boolean | null;
   gridFlow: number | string;       // W (+ import, - export)
   gridAvailable: boolean;          // true/false
   deadbandW?: number;              // default 80

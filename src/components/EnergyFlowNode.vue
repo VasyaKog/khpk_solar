@@ -1,5 +1,5 @@
 <template>
-  <div class="energy-node-container">
+  <div class="energy-node-container" :class="{'is-disabled blur': isDisabled}">
     <!-- SVG для ліній потоку -->
     <svg class="flow-lines" viewBox="0 0 200 200">
       <line x1="100" y1="-138" x2="100" y2="100" :class="['line', { 'active': solarPower > 0 }]" />
@@ -26,6 +26,7 @@
 
 <script setup>
 const props = defineProps({
+  isDisabled: Boolean,
   solarPower: Number,
   batteryFlow: Number, // + заряд (в батарею), - розряд (з батареї)
   gridFlow: Number,    // + імпорт (з мережі), - експорт (в мережу)

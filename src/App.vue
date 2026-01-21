@@ -1,20 +1,22 @@
 <template>
-    <template v-if="!loading && data.inverters && data.inverters.length == 2">
+    <template v-if="(!!inverter1 || !!inverter2)">
       <DashboardLayout
-          :line1Name="data.inverters[0].name"
-          :line2Name="data.inverters[1].name"
-          :line1SolarPower="data.inverters[0]?.pvPower"
-          :line2SolarPower="data.inverters[1]?.pvPower"
-          :line1GridFlow="data.inverters[0]?.gridFlow"
-          :line1GridAvailable="data.inverters[0].gridStatus"
-          :line2GridFlow="data.inverters[1].gridFlow"
-          :line2GridAvailable="data.inverters[1].gridStatus"
-          :line1LoadPower="data.inverters[0].consumption"
-          :line2LoadPower="data.inverters[1].consumption"
-          :line1BatterySoc="data.inverters[0].soc"
-          :line1BatteryFlow="data.inverters[0].batteryFlow"
-          :line2BatterySoc="data.inverters[1].soc"
-          :line2BatteryFlow="data.inverters[1].batteryFlow"
+          :line1Enabled="!!inverter1"
+          :line2Enabled="!!inverter2"
+          line1Name="Лінія 1"
+          line2Name="Лінія 2"
+          :line1SolarPower="inverter1?.pvPower"
+          :line2SolarPower="inverter2?.pvPower"
+          :line1GridFlow="inverter1?.gridFlow"
+          :line1GridAvailable="inverter1?.gridStatus"
+          :line2GridFlow="inverter2?.gridFlow"
+          :line2GridAvailable="inverter2?.gridStatus"
+          :line1LoadPower="inverter1?.consumption"
+          :line2LoadPower="inverter2?.consumption"
+          :line1BatterySoc="inverter1?.soc"
+          :line1BatteryFlow="inverter1?.batteryFlow"
+          :line2BatterySoc="inverter2?.soc"
+          :line2BatteryFlow="inverter2?.batteryFlow"
           :khpkTotalLoad="10000"
           :khkp-b-g-url="'/images/HPK.png'"
           />
@@ -29,6 +31,9 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import DashboardLayout from "./components/DashboardLayout.vue";
 const VITE_API_DATA_URL = import.meta.env.VITE_API_DATA_URL;
 const VITE_DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE;
+const VITE_INV_1_SN = import.meta.env.VITE_INV_1_SN;
+const VITE_INV_2_SN = import.meta.env.VITE_INV_2_SN;
+
 
 const STATUS_MAP = {
   100: 'Wait Mode',
@@ -48,6 +53,8 @@ function useQuery() {
 }
 
 const data = ref({})
+const inverter1 = ref(null);
+const inverter2 = ref(null);
 const error = ref(null)
 const loading = ref(true)
 const lastUpdated = ref(null)
@@ -127,6 +134,8 @@ function startDemo() {
       inverters: inverters,
     }
 
+    inverter1.value = inv1;
+    inverter2.value = inv2;
 
     lastUpdated.value = now
     loading.value = false
@@ -142,7 +151,13 @@ async function fetchOnce() {
     const r = await fetch(url, { cache: 'no-store',  })
     if (!r.ok) throw new Error('HTTP '+r.status)
     const json = await r.json();
+    console.log('json', json);
     data.value = json;
+
+    inverter1.value = json.inverters.find((inv) => inv.sn === VITE_INV_1_SN)
+    inverter2.value = json.inverters.find((inv) => inv.sn === VITE_INV_2_SN)
+    console.log('inverter1', inverter1.value)
+    console.log('inverter2', inverter2.value)
   } catch (e) {
     error.value = String(e)
   } finally {
