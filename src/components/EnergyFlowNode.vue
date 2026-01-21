@@ -7,12 +7,12 @@
       <template v-if="isRight">
       <line x1="-38" y1="100" x2="100" y2="100" :class="['line', 'active', 'flow-out']" />
 <!---->
-      <line x2="265" y2="100" x1="100" y1="100" :class="['line', { 'flow-in': gridFlow > 0, 'flow-out': gridFlow < 0, 'disabled': !gridAvailable }]" />
+      <line x2="265" y2="100" x1="100" y1="100" :class="['line', { 'flow-in': gridFlow < 0, 'flow-out': gridFlow > 0, 'disabled': !gridAvailable }]" />
       </template>
       <template v-else>
         <line x1="265" y1="100" x2="100" y2="100" :class="['line', 'active', 'flow-out']" />
 <!---->
-        <line x1="100" y1="100" x2="-38" y2="100" :class="['line' , { 'flow-in': gridFlow > 0, 'flow-out': gridFlow < 0, 'disabled': !gridAvailable }]" />
+        <line x2="-38" y2="100" x1="100" y1="100" :class="['line' , { 'flow-out': gridFlow > 0, 'flow-in': gridFlow < 0, 'disabled': !gridAvailable }]" />
       </template>
 
       <line x1="100" y1="100" x2="100" y2="365" :class="{'line':1, 'active': 1, 'flow-in': batteryFlow > 0, 'flow-out': batteryFlow < 0 }" />
