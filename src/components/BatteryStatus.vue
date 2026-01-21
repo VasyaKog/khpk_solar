@@ -204,7 +204,6 @@ const levelStyle = computed(() => ({
   left: 0;
   bottom: 0;
   width: 100%;
-  transition: height 650ms ease;
   z-index: 1;
 }
 
@@ -293,20 +292,9 @@ const levelStyle = computed(() => ({
   height: 22px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.25);
-  animation: waveMove 2.2s linear infinite;
 }
 .wave2 {
   top: 58%;
   opacity: 0.18;
-  animation-duration: 3.2s;
-}
-@keyframes waveMove {
-  from { transform: translateX(-20%); }
-  to { transform: translateX(20%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .level { transition: none; }
-  .wave { animation: none; display: none; }
 }
 </style>
