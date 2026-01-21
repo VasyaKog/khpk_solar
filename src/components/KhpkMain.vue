@@ -63,8 +63,8 @@ const bgStyle = computed(() => ({
 
 <style scoped>
 .college-center {
-  --w: 500px;
-  --stage-h: 333px;
+  --w: clamp(240px, 50vw, 520px);
+  --stage-h: clamp(160px, 35vw, 333px);
 
   width: var(--w);
   display: grid;
@@ -96,8 +96,6 @@ const bgStyle = computed(() => ({
   padding: 12px 14px;
 
   background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
 
   border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow:

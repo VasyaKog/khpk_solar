@@ -1,100 +1,106 @@
 <template>
   <div class="main">
     <div class="dash">
-    <!-- top: solar L/R -->
-    <div class="cell solar-left">
-      <Solar
-          :isDisabled="line1Disabled"
-          :solarPower="line1SolarPower"
-          :inverterName="line1Name"
-      />
-    </div>
+      <!-- top: solar L/R -->
+      <div class="row row-top">
+        <div class="cell solar-left">
+          <Solar
+              :isDisabled="line1Disabled"
+              :solarPower="line1SolarPower"
+              :inverterName="line1Name"
+          />
+        </div>
 
-    <div class="cell logo-center">
-      <LogoHPK />
-    </div>
+        <div class="cell logo-center">
+          <LogoHPK />
+        </div>
 
-    <div class="cell solar-right">
-      <Solar
-          :isDisabled="line2Disabled"
-          :solarPower="line2SolarPower"
-          :inverterName="line2Name"
-      />
-    </div>
+        <div class="cell solar-right">
+          <Solar
+              :isDisabled="line2Disabled"
+              :solarPower="line2SolarPower"
+              :inverterName="line2Name"
+          />
+        </div>
+      </div>
 
-    <!-- middle: grid L/R + load L/R + center -->
-    <div class="cell grid-left">
-      <Grid
-          :isDisabled="line1Disabled"
-          :gridAvailable="!!line1GridAvailable"
-          :gridFlow="line1GridFlow"
-      />
-    </div>
+      <!-- middle: grid L/R + load L/R + center -->
+      <div class="row row-middle">
+        <div class="cell grid-left">
+          <Grid
+              :isDisabled="line1Disabled"
+              :gridAvailable="!!line1GridAvailable"
+              :gridFlow="line1GridFlow"
+          />
+        </div>
 
-    <div class="cell node-left">
-      <EnergyFlowNode
-          :isDisabled="line1Disabled"
-          :isRight="0"
-          :gridAvailable="line1GridAvailable"
-          :gridFlow="line1GridFlow"
-          :batteryFlow="line1BatteryFlow"
-          :solarPower="line1SolarPower"
-      />
-    </div>
+        <div class="cell node-left">
+          <EnergyFlowNode
+              :isDisabled="line1Disabled"
+              :isRight="0"
+              :gridAvailable="line1GridAvailable"
+              :gridFlow="line1GridFlow"
+              :batteryFlow="line1BatteryFlow"
+              :solarPower="line1SolarPower"
+          />
+        </div>
 
-    <div class="cell load-left">
-      <Load :isDisabled="line1Disabled"
-           :loadPower="line1LoadPower"
-      />
-    </div>
+        <div class="cell load-left">
+          <Load :isDisabled="line1Disabled"
+               :loadPower="line1LoadPower"
+          />
+        </div>
 
-    <div class="cell center">
-      <KhpkMain :backgroundUrl="khkpBGUrl" :totalLoad="khpkTotalLoad" />
-    </div>
+        <div class="cell center">
+          <KhpkMain :backgroundUrl="khkpBGUrl" :totalLoad="khpkTotalLoad" />
+        </div>
 
-    <div class="cell load-right">
-      <Load
-          :isDisabled="line2Disabled"
-          :loadPower="line2LoadPower"
-      />
-    </div>
+        <div class="cell load-right">
+          <Load
+              :isDisabled="line2Disabled"
+              :loadPower="line2LoadPower"
+          />
+        </div>
 
-    <div class="cell node-right">
-      <EnergyFlowNode
-          :isDisabled="line2Disabled"
-          :isRight="1"
-          :gridAvailable="line2GridAvailable"
-          :gridFlow="line2GridFlow"
-          :batteryFlow="line2BatteryFlow"
-          :solarPower="line2SolarPower"
-      />
-    </div>
+        <div class="cell node-right">
+          <EnergyFlowNode
+              :isDisabled="line2Disabled"
+              :isRight="1"
+              :gridAvailable="line2GridAvailable"
+              :gridFlow="line2GridFlow"
+              :batteryFlow="line2BatteryFlow"
+              :solarPower="line2SolarPower"
+          />
+        </div>
 
-    <div class="cell grid-right">
-      <Grid
-          :isDisabled="line2Disabled"
-          :gridAvailable="!!line2GridAvailable"
-          :gridFlow="line2GridFlow"
-      />
-    </div>
+        <div class="cell grid-right">
+          <Grid
+              :isDisabled="line2Disabled"
+              :gridAvailable="!!line2GridAvailable"
+              :gridFlow="line2GridFlow"
+          />
+        </div>
+      </div>
 
-    <!-- bottom: battery L/R -->
-    <div class="cell bat-left">
-      <BatteryStatus
-          :isDisabled="line1Disabled"
-          :soc="line1BatterySoc"
-          :batteryFlow="line1BatteryFlow"
-      />
-    </div>
+      <!-- bottom: battery L/R -->
+      <div class="row row-bottom">
+        <div class="cell bat-left">
+          <BatteryStatus
+              :isDisabled="line1Disabled"
+              :soc="line1BatterySoc"
+              :batteryFlow="line1BatteryFlow"
+          />
+        </div>
 
-    <div class="cell bat-right">
-      <BatteryStatus
-          :isDisabled="line2Disabled"
-          :soc="line2BatterySoc"
-          :batteryFlow="line2BatteryFlow"
-      />
+        <div class="cell bat-right">
+          <BatteryStatus
+              :isDisabled="line2Disabled"
+              :soc="line2BatterySoc"
+              :batteryFlow="line2BatteryFlow"
+          />
+        </div>
+      </div>
     </div>
-  </div>
   </div>
 <!--  <div class="footer">-->
 
@@ -150,93 +156,43 @@ const line2Disabled = computed(() => !props.line2Enabled);
 .dash {
   height: 100%;
   margin: auto;
-  align-content: space-evenly; /* розносить ряди по висоті */
-  row-gap: clamp(24px, 4vh, 64px);
-  --tile: 180px; /* бажано щоб Solar/Grid/Load/Battery теж мали таку ширину */
-  --centerW: clamp(320px, 34vw, 520px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 3.5vh, 48px);
+}
 
-  --gapX: clamp(18px, 3vw, 48px);
-  --gapY: clamp(14px, 2.2vw, 36px);
-
-  width: max-content;
-
-  display: grid;
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  justify-items: center;
-
-  gap: var(--gapY) var(--gapX);
-
-  grid-template-columns:
-    minmax(0, var(--tile))
-    minmax(0, var(--tile))
-    minmax(0, var(--tile))
-    minmax(0, var(--centerW))
-    minmax(0, var(--tile))
-    minmax(0, var(--tile))
-    minmax(0, var(--tile));
-
-  grid-template-rows: auto auto auto;
-
-  grid-template-areas:
-    ".  solar-left . logo-center . solar-right  ."
-    "grid-left node-left load-left center load-right node-right grid-right"
-    ". bat-left .     center .     bat-right .";
+  gap: clamp(14px, 2.4vw, 36px);
 }
 
-/* assign areas */
-.solar-left  { grid-area: solar-left; }
-.solar-right { grid-area: solar-right; }
-
-.grid-left   { grid-area: grid-left; }
-.grid-right  { grid-area: grid-right; }
-
-.load-left   { grid-area: load-left; }
-.load-right  { grid-area: load-right; }
-
-.node-left   { grid-area: node-left; }
-.node-right  { grid-area: node-right; }
-
-.bat-left    { grid-area: bat-left; }
-.bat-right   { grid-area: bat-right; }
-
-.logo-center { grid-area: logo-center; }
-.center      { grid-area: center; }
-
-
-.center  {
-  width: 150%;
+.row-middle {
+  gap: clamp(12px, 2vw, 28px);
 }
 
-/* стабілізуємо поведінку елементів */
 .cell {
-  width: 100%;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(140px, 22vw, 200px);
+  flex: 0 1 auto;
 }
 
-/* Твердження: елемент не має розпирати клітинку, лише вписуватись */
+.cell.center {
+  width: clamp(240px, 52vw, 560px);
+  flex: 1 1 clamp(240px, 52vw, 560px);
+}
+
+.cell.logo-center {
+  width: clamp(140px, 22vw, 200px);
+}
+
 .cell > * {
+  width: 100%;
   max-width: 100%;
-}
-
-/* Mobile fallback */
-@media (max-width: 980px) {
-  .dash {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "center"
-      "logo-center"
-      "node-left"
-      "node-right"
-      "solar-left"
-      "solar-right"
-      "load-left"
-      "load-right"
-      "bat-left"
-      "bat-right"
-      "grid-left"
-      "grid-right";
-  }
 }
 
 .main {

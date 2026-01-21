@@ -22,8 +22,6 @@ a,
     padding: 5px;
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.28);
-    backdrop-filter: blur(14px) saturate(120%);
-    -webkit-backdrop-filter: blur(14px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.45);
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.35);
@@ -40,7 +38,7 @@ a,
     right: 0;
     bottom: 10px;
     text-align: center;
-    font-size: 28px;
+    font-size: clamp(18px, 2.6vw, 28px);
     font-weight: 900;
     z-index: 5;
     color: #0f172a;
@@ -60,8 +58,9 @@ a,
 }
 
 .card {
-    width: 160px;
-    height: 160px;
+    width: 100%;
+    max-width: 180px;
+    aspect-ratio: 1 / 1;
     border-radius: 18px;
     border: 3px solid rgba(15, 23, 42, 0.18);
     background: rgba(226, 232, 240, 0.55);
@@ -71,16 +70,15 @@ a,
 
 .title {
     line-height: 50px;
-    font-size: 2.5rem;
+    font-size: clamp(1.4rem, 2.4vw, 2.5rem);
     text-transform: uppercase;
     color: #000;
     font-weight: 1000;
 }
 
-.is-disabled.blur {
-    filter: blur(4px) grayscale(100%);
-    opacity: 0.6;
-    transition: filter 0.3s ease, opacity 0.3s ease;
+.is-disabled {
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
 }
 
 @media (hover: hover) {
@@ -88,4 +86,3 @@ a,
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
-
