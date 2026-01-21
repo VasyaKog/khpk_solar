@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-mini glass" :class="[modeClass, {'is-disabled blur': isDisabled}]" role="group" aria-label="Grid status">
+  <div class="grid-mini glass" :class="[modeClass, {'is-disabled': isDisabled}]" role="group" aria-label="Grid status">
     <!-- status -->
     <div class="status" :title="modeLabel">
       <span class="dot" aria-hidden="true"></span>
@@ -109,7 +109,7 @@ const powerDisplay = computed(() => {
 
 <style scoped>
 .grid-mini {
-  --w: 180px;
+  --w: clamp(140px, 22vw, 200px);
   width: var(--w);
   display: grid;
   grid-template-rows: 28px auto;
@@ -131,8 +131,6 @@ const powerDisplay = computed(() => {
   border-radius: 999px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   font-weight: 800;
   letter-spacing: 0.01em;
 }

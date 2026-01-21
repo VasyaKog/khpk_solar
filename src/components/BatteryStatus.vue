@@ -1,5 +1,5 @@
 <template>
-  <div class="battery-mini glass" :class="[modeClass, {'is-disabled blur': isDisabled}]" role="group" aria-label="Battery status">
+  <div class="battery-mini glass" :class="[modeClass, {'is-disabled': isDisabled}]" role="group" aria-label="Battery status">
     <!-- status row (fixed height) -->
     <div class="status" :title="modeLabel">
       <span class="dot" aria-hidden="true"></span>
@@ -108,9 +108,9 @@ const levelStyle = computed(() => ({
 <style scoped>
 /* compact, controllable sizes */
 .battery-mini {
-  --w: 180px;      /* overall width */
-  --body-w: 96px;  /* battery width */
-  --body-h: 150px; /* battery height */
+  --w: clamp(140px, 22vw, 200px);      /* overall width */
+  --body-w: clamp(80px, 12vw, 96px);  /* battery width */
+  --body-h: clamp(120px, 18vw, 150px); /* battery height */
   --cap-w: 44px;
   --cap-h: 10px;
 
@@ -128,8 +128,6 @@ const levelStyle = computed(() => ({
   border-radius: 22px;
 
   background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
 
   border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow:
@@ -149,8 +147,6 @@ const levelStyle = computed(() => ({
 
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 
   font-weight: 800;
   letter-spacing: 0.01em;

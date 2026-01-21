@@ -1,5 +1,5 @@
 <template>
-  <div class="energy-node-container" :class="{'is-disabled blur': isDisabled}">
+  <div class="energy-node-container" :class="{'is-disabled': isDisabled}">
     <!-- SVG для ліній потоку -->
     <svg class="flow-lines" viewBox="0 0 200 200">
       <line x1="100" y1="-74" x2="100" y2="100" :class="['line', { 'active': solarPower > 0 }]" />
@@ -39,12 +39,11 @@ const props = defineProps({
 <style scoped>
 .energy-node-container {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: clamp(120px, 18vw, 180px);
+  height: clamp(120px, 18vw, 180px);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: -25px;
 }
 
 .flow-lines {
