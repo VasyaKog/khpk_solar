@@ -151,13 +151,10 @@ async function fetchOnce() {
     const r = await fetch(url, { cache: 'no-store',  })
     if (!r.ok) throw new Error('HTTP '+r.status)
     const json = await r.json();
-    console.log('json', json);
     data.value = json;
 
     inverter1.value = json.inverters.find((inv) => inv.sn === VITE_INV_1_SN)
     inverter2.value = json.inverters.find((inv) => inv.sn === VITE_INV_2_SN)
-    console.log('inverter1', inverter1.value)
-    console.log('inverter2', inverter2.value)
   } catch (e) {
     error.value = String(e)
   } finally {

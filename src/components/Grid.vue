@@ -61,8 +61,8 @@ const toNum = (v: unknown) => {
 
 const labels = computed<Record<GridMode, string>>(() => ({
   import: props.labels?.import ?? "Імпорт",
-  export: props.labels?.export ?? "Експрот",
-  idle: props.labels?.idle ?? "Мережа",
+  export: props.labels?.export ?? "Експорт",
+  idle: props.labels?.idle ?? "Очікування",
   offline: props.labels?.offline ?? "Без мережі",
 }));
 

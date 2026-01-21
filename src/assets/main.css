@@ -2,11 +2,11 @@
 
 #app {
     font-weight: bold;
-    background: url('/images/background.png') no-repeat center center fixed;
+    background: #8bb5f8;
     background-size: cover;
-    width: 100vw;
-    height: 100vh;
-    padding: 1rem 1rem;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
 }
 
 a,
